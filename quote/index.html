@@ -191,6 +191,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 }
 .item .amount span{font-size:11px;color:var(--muted)}
 .item .amount b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.item .amount.full{margin-top:8px;justify-content:space-between}
+.item .amount.full b{font-size:13.5px;color:#2C4470}
 .item input{height:41px;font-size:15.5px;background:#fff}
 .add-item{
   width:100%;height:44px;margin-top:10px;border-radius:11px;border:1px dashed #C8D2E2;
@@ -473,9 +475,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="field"><label>연락처</label><input type="tel" data-bind="client.tel" placeholder="010-0000-0000" autocomplete="off"></div>
           <div class="field"><label>주소 <span class="sub">선택</span></label><input type="text" data-bind="client.addr" placeholder="대전 서구 …" autocomplete="off"></div>
         </div>
+        <div class="grid2" data-detail-only hidden>
+          <div class="field"><label>대표자 <span class="sub">상대편 사업자</span></label><input type="text" data-bind="client.ceo" placeholder="예) 김○○" autocomplete="off"></div>
+          <div class="field"><label>사업자등록번호 <span class="sub">상대편</span></label><input type="text" data-bind="client.bizno" placeholder="000-00-00000" inputmode="numeric" autocomplete="off"></div>
+        </div>
         <div class="field" data-detail-only hidden>
           <label>현장 주소 <span class="sub">선택</span></label>
           <input type="text" data-bind="client.site" placeholder="철거·공사 현장 주소" autocomplete="off">
+        </div>
+        <div class="field" data-detail-only hidden>
+          <label>담당자 · 연락처 <span class="sub">문서 상단 표시</span></label>
+          <p class="note-box" style="margin:0">문서 상단의 담당자는 <b>01 사업자</b>의 대표자가, 연락처는 <b>공사내역서 연락처</b>가 들어갑니다. [정보 수정]에서 바꿀 수 있습니다.</p>
         </div>
       </div>
     </div>
@@ -578,7 +588,14 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         <div class="field"><label>대표</label><input type="text" id="bzCeo" autocomplete="off"></div>
         <div class="field"><label>사업자번호</label><input type="text" id="bzNo" inputmode="numeric" placeholder="000-00-00000" autocomplete="off"></div>
       </div>
-      <div class="field"><label>연락처</label><input type="tel" id="bzTel" placeholder="010-0000-0000" autocomplete="off"></div>
+      <div class="grid2">
+        <div class="field"><label>업태 <span class="sub">공사내역서 표시</span></label><input type="text" id="bzUptae" placeholder="예) 폐기물처리" autocomplete="off"></div>
+        <div class="field"><label>종목 <span class="sub">공사내역서 표시</span></label><input type="text" id="bzJongmok" placeholder="예) 사업장비배출 시설폐기물" autocomplete="off"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>연락처 <span class="sub">견적서·거래명세서</span></label><input type="tel" id="bzTel" placeholder="010-0000-0000" autocomplete="off"></div>
+        <div class="field"><label>공사내역서 연락처 <span class="sub">비우면 위 연락처</span></label><input type="tel" id="bzTelDetail" placeholder="010-0000-0000" autocomplete="off"></div>
+      </div>
       <div class="field"><label>주소</label><input type="text" id="bzAddr" placeholder="사업장 주소" autocomplete="off"></div>
       <div class="field">
         <label>우리 이메일 <span class="sub">회신 메일 · 문서·메일 본문에 표시</span></label>
@@ -650,7 +667,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <p><b>부가세 포함</b> — 입력한 단가·수량이 이미 부가세가 포함된 금액입니다. 총액은 그대로 두고 공급가액과 세액을 나눠 표시합니다.<br><b>부가세 별도</b> — 입력한 금액이 공급가액이고, 10%를 더해 합계를 냅니다.<br><b>일반(부가세 없음)</b> — 세액 줄 없이 품목 합계만 표시합니다. 현금 거래·간이과세·부가세 미표기 견적용.</p>
         </div>
         <div>
-          <h4><span class="num">7</span>고객 이메일로 바로 보내기</h4>
+          <h4><span class="num">7</span>공사내역서 양식</h4>
+          <p><b>상세 공사내역서</b>를 고르면 실제 공사내역서 양식으로 나옵니다. 상단에 <b>담당자</b>(사업자 대표자)와 <b>연락처</b>(사업자의 <b>공사내역서 연락처</b>)·<b>견적일자</b>가 들어가고, 그 아래 <b>왼쪽 = 공급받는자(상대편 사업자) / 오른쪽 = 공급자(우리 사업자)</b> 표가 나란히 놓입니다. 상대편 상호·사업자번호·대표자는 <b>02 문서 정보</b>에서 적고, 우리 쪽 업태·종목은 <b>[정보 수정]</b>에서 적습니다. 품목표는 <b>NO·품명·규격·단위·수량·단가·공급가액·세액</b>이고, 합계는 <b>소계·총공급가액·세액·합계(부가세 포함)</b>로 나옵니다. 참고사항에는 완료 확인 문구가 자동으로 들어가며(자유롭게 고칠 수 있음), 그 아래에 계좌번호가 찍힙니다. 도장은 서명란이 아니라 <b>공급자 표의 대표자 (인)</b> 자리에 찍힙니다.</p>
+        </div>
+        <div>
+          <h4><span class="num">8</span>고객 이메일로 바로 보내기</h4>
           <p>공급받는자에 <b>이메일</b>을 적어 두고 <b>메일</b> 버튼을 누르면 메일 앱이 열립니다. 제목·본문(합계금액·입금계좌·연락처)이 자동으로 채워집니다. 사업자마다 다른 <b>우리 이메일</b>을 저장해 두었다면 본문에 <b>회신 메일</b> 줄이 함께 들어가 받는 분이 바로 회신할 수 있습니다. 메일로는 파일이 자동 첨부되지 않으니, 먼저 <b>PNG 저장</b> 또는 <b>PDF</b>로 받은 파일을 메일 앱에서 첨부해 발송하세요. 이메일을 비워 두면 받는사람 없이 열려 직접 입력할 수 있습니다.</p>
         </div>
       </div>
@@ -714,7 +735,7 @@ const store = {
 const TYPES = {
   quote:   { plain:'견적서',        title:'견 적 서',     prefix:'Q', due:'견적 유효기간', closing:'위와 같이 견적합니다.',        sumLabel:'견적금액' },
   invoice: { plain:'거래명세서',    title:'거래명세서',   prefix:'T', due:'납기일',        closing:'위와 같이 거래 내역을 명세합니다.', sumLabel:'합계금액' },
-  detail:  { plain:'상세 공사내역서', title:'상세 공사내역서', prefix:'D', due:'완료일',  closing:'위와 같이 공사 내역을 명세합니다.',  sumLabel:'공사금액' }
+  detail:  { plain:'상세 공사내역서', sheet:'공사내역서', title:'상세 공사내역서', prefix:'D', due:'완료일',  closing:'위와 같이 공사 내역을 명세합니다.',  sumLabel:'공사금액' }
 };
 
 /* ---------------- 사업자 기본값 (확인된 정보만) ----------------
@@ -723,13 +744,16 @@ const JOTAE_EMAIL = 'jotae1990@naver.com';
 const JOTAE_ADDR  = '대전광역시 서구 계백로 1161, 404-M02호(도안동, 유니온빌딩)';  // 사업자등록증 확인
 const UNM_ADDR    = '대전 동구 대전로1002번길 42-1, 103호';
 const MY_MAILS = ['365naturestore@naver.com', 'mndbrud@naver.com', JOTAE_EMAIL, 'noni1127@naver.com'];
+/* 클린환경 기본 도장 — 매장 도장 스캔에서 흰 배경을 제거한 260px 투명 PNG.
+   클린환경 프리셋에만 기본 적용되고, [정보 수정]·도장 '지우기'로 교체/삭제할 수 있다. */
+const CLEAN_STAMP = 'data:image/png;base64,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';
 const BIZ_SEED = [
-  { id:'clean',    label:'클린환경 (폐기물)',        name:'클린환경',        ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
-  { id:'cheolgeo', label:'원상복구철거센터 (철거)',   name:'원상복구철거센터', ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
-  { id:'yupum',    label:'유품정리연구소',           name:'유품정리연구소',   ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
-  { id:'unmyeong', label:'운명연구소 / 운명나침반',  name:'운명연구소',      ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'365naturestore@naver.com', bank:'', acct:'', holder:'', sv:2 },
-  { id:'ascent',   label:'어센트마케팅',             name:'어센트마케팅',    ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'mndbrud@naver.com', bank:'', acct:'', holder:'', linkId:'unmyeong', sv:2 },
-  { id:'junta',    label:'준탁구클럽',               name:'준탁구클럽',      ceo:'', bizno:'', tel:'', addr:'대전 대덕구 오정로37번길 53 2층', email:'', bank:'', acct:'', holder:'', sv:2 }
+  { id:'clean',    label:'클린환경 (폐기물)',        name:'클린환경',        ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, uptae:'폐기물처리', jongmok:'사업장비배출 시설폐기물', stamp:CLEAN_STAMP, telDetail:'010-9743-1990', bank:'', acct:'', holder:'', sv:4 },
+  { id:'cheolgeo', label:'원상복구철거센터 (철거)',   name:'원상복구철거센터', ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, uptae:'', jongmok:'', bank:'', acct:'', holder:'', sv:4 },
+  { id:'yupum',    label:'유품정리연구소',           name:'유품정리연구소',   ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, uptae:'', jongmok:'', bank:'', acct:'', holder:'', sv:4 },
+  { id:'unmyeong', label:'운명연구소 / 운명나침반',  name:'운명연구소',      ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'365naturestore@naver.com', uptae:'', jongmok:'', bank:'', acct:'', holder:'', sv:4 },
+  { id:'ascent',   label:'어센트마케팅',             name:'어센트마케팅',    ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'mndbrud@naver.com', uptae:'', jongmok:'', bank:'', acct:'', holder:'', linkId:'unmyeong', sv:4 },
+  { id:'junta',    label:'준탁구클럽',               name:'준탁구클럽',      ceo:'', bizno:'', tel:'', addr:'대전 대덕구 오정로37번길 53 2층', email:'', uptae:'', jongmok:'', bank:'', acct:'', holder:'', sv:4 }
 ];
 
 /* ---------------- 사업자 목록 로드/저장 ---------------- */
@@ -739,12 +763,12 @@ function loadBiz(){
   // 기본 프리셋은 항상 존재하도록 병합 (사용자가 수정한 값은 유지)
   BIZ_SEED.forEach(seed=>{
     const found = list.find(b=>b.id===seed.id);
-    if(!found) list.push(Object.assign({}, seed, {builtin:true, stamp:''}));
+    if(!found) list.push(Object.assign({}, seed, {builtin:true, stamp: seed.stamp || ''}));
     else {
       found.builtin = true; if(found.label==null) found.label = seed.label;
       // 프리셋 기본값 갱신: 비어 있는 칸만 새 기본값으로 채운다(사용자가 적은 값은 그대로 둔다)
       if(found.sv !== seed.sv){
-        ['name','ceo','bizno','tel','addr','email','bank','acct','holder'].forEach(k=>{
+        ['name','ceo','bizno','tel','telDetail','addr','email','uptae','jongmok','bank','acct','holder','stamp'].forEach(k=>{
           const cur = found[k];
           if((cur == null || String(cur).trim() === '') && seed[k]) found[k] = seed[k];
         });
@@ -780,6 +804,22 @@ function fmtDateKo(iso){
   const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if(!m) return iso;
   return m[1]+'년 '+Number(m[2])+'월 '+Number(m[3])+'일';
+}
+/* 2026년 11월 16일 월요일 — 공사내역서 상단 양식 */
+const WEEK_KO = ['일','월','화','수','목','금','토'];
+function fmtDateKoWeek(iso){
+  if(!iso) return '';
+  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return iso;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const w = isNaN(d.getTime()) ? '' : ' ' + WEEK_KO[d.getDay()] + '요일';
+  return m[1]+'년 '+Number(m[2])+'월 '+Number(m[3])+'일'+w;
+}
+/* 2026년11월16일 — 완료 확인 문구용(붙여쓰기) */
+function fmtDateKoCompact(iso){
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return '';
+  return m[1]+'년'+m[2]+'월'+m[3]+'일';
 }
 function num(v){
   if(typeof v === 'number') return isFinite(v) ? v : 0;
@@ -832,6 +872,7 @@ function calcModel(s){
     no: i + 1,
     name: (it.name || '').trim(),
     spec: (it.spec || '').trim(),
+    unit: (it.unit || '').trim(),
     qty: num(it.qty),
     price: num(it.unitPrice),
     remark: (it.remark || '').trim()
@@ -847,11 +888,27 @@ function calcModel(s){
     mode = 'none'; supply = sum; tax = 0; total = sum;
   }
   const vatLabel = mode === 'incl' ? '부가세 포함' : (mode === 'excl' ? '부가세 별도' : '');
+
+  /* 품목별 공급가액·세액 (공사내역서 품목표의 공급가액/세액 칸)
+     합계와 어긋나지 않도록 마지막 품목에서 반올림 차이를 보정한다. */
+  let rowSupply = 0, rowTax = 0;
+  items.forEach(it=>{
+    if(!it.amount){ it.rsupply = 0; it.rtax = (mode === 'none' ? null : 0); return; }
+    if(mode === 'incl'){ it.rsupply = Math.round(it.amount / 1.1); it.rtax = it.amount - it.rsupply; }
+    else if(mode === 'excl'){ it.rsupply = it.amount; it.rtax = Math.round(it.amount * 0.1); }
+    else { it.rsupply = it.amount; it.rtax = null; }   // 면세: 세액 칸 비움
+    rowSupply += it.rsupply; rowTax += (it.rtax || 0);
+  });  const last = items.filter(it=>it.amount).pop();
+  if(last){
+    if(mode === 'incl'){ last.rsupply += supply - rowSupply; last.rtax = last.amount - last.rsupply; }
+    else if(mode === 'excl'){ last.rtax += tax - rowTax; }
+  }
+
   return { items, sum, supply, tax, total, vat: mode, vatLabel, hasTax: mode !== 'none' };
 }
 
 /* ---------------- 새 문서 ---------------- */
-function blankItem(){ return { name:'', spec:'', qty:'1', unitPrice:'', remark:'' }; }
+function blankItem(){ return { name:'', spec:'', unit:'', qty:'1', unitPrice:'', remark:'' }; }
 function newState(type, bizId){
   const t = type || 'quote';
   return {
@@ -862,14 +919,33 @@ function newState(type, bizId){
     date: todayISO(),
     dueDate: addDaysISO(todayISO(), t === 'quote' ? 14 : (t === 'invoice' ? 7 : 0)),
     title: '', period: '',
-    client: { name:'', email:'', tel:'', addr:'', site:'' },
+    client: { name:'', email:'', tel:'', addr:'', site:'', ceo:'', bizno:'' },
     items: [blankItem(), blankItem()],
     vat: 'excl',
     acct: { bank:'', number:'', holder:'' },
     note: '',
+    noteAuto: true,
     stamp: { show: true },
     doneConfirm: true
   };
+}
+/* ---------------- 공사내역서 완료 확인 문구 (자동 생성 · 자유 수정) ---------------- */
+function detailNoteText(s){
+  const b = getBiz(s.bizId);
+  const when = fmtDateKoCompact(s.date);
+  const ceo = (b && b.ceo ? String(b.ceo) : '').trim();
+  return '위와 같이 사업장 철거 공사 진행을 완료했음을 확인합니다.\n' +
+    (when ? when + ' ' : '') + '사업주 대표: ' + (ceo || '');
+}
+/* 사용자가 손대지 않은 자동 문구는 사업자·날짜가 바뀌면 다시 맞춘다 */
+function syncAutoNote(s, force){
+  const auto = detailNoteText(s);
+  if(s.type === 'detail' && s.noteAuto !== false &&
+     (force || s.noteAuto === true || !String(s.note || '').trim() || s._autoNote === s.note)){
+    s.note = auto;
+  }
+  s._autoNote = auto;
+  return s.note;
 }
 /* 사업자의 계좌 정보를 문서로 복사 */
 function syncAcct(s, biz){
@@ -955,6 +1031,14 @@ function hairline(ctx, x1, y, x2, color, w){
   ctx.lineTo(x2, y + 0.5);
   ctx.stroke();
 }
+function vline(ctx, x, y1, y2, color, w){
+  ctx.beginPath();
+  ctx.strokeStyle = color || C.soft;
+  ctx.lineWidth = w || 1;
+  ctx.moveTo(x + 0.5, y1);
+  ctx.lineTo(x + 0.5, y2);
+  ctx.stroke();
+}
 function roundRect(ctx, x, y, w, h, r){
   const rr = Math.min(r, w/2, h/2);
   ctx.beginPath();
@@ -978,9 +1062,9 @@ function buildDoc(s){
   return {
     type: s.type, t, biz, cm,
     docNo: (s.docNo || '').trim(),
-    dateStr: fmtDate(s.date), dateKo: fmtDateKo(s.date),
+    dateStr: fmtDate(s.date), dateKo: fmtDateKo(s.date), dateKoWeek: fmtDateKoWeek(s.date),
     dueStr: (s.type === 'detail') ? '' : fmtDate(s.dueDate), dueLabel: t.due,
-    client: s.client || { name:'', tel:'', addr:'', site:'' },
+    client: s.client || { name:'', tel:'', addr:'', site:'', ceo:'', bizno:'' },
     acct: s.acct || { bank:'', number:'', holder:'' },
     note: (s.note || '').trim(),
     period: (s.period || '').trim(),
@@ -996,13 +1080,14 @@ function buildDoc(s){
 function columnsFor(type){
   if(type === 'detail'){
     return [
-      { key:'no',     label:'No',   w:34,  align:'center' },
-      { key:'name',   label:'품명', w:229, align:'left' },
-      { key:'spec',   label:'규격', w:92,  align:'left' },
-      { key:'qty',    label:'수량', w:48,  align:'center' },
-      { key:'price',  label:'단가', w:92,  align:'right' },
-      { key:'amount', label:'금액', w:108, align:'right' },
-      { key:'remark', label:'비고', w:83,  align:'left' }
+      { key:'no',     label:'NO',      w:34,  align:'center' },
+      { key:'name',   label:'품명',    w:200, align:'left' },
+      { key:'spec',   label:'규격',    w:84,  align:'left' },
+      { key:'unit',   label:'단위',    w:40,  align:'center' },
+      { key:'qty',    label:'수량',    w:42,  align:'center' },
+      { key:'price',  label:'단가(원)', w:86,  align:'right' },
+      { key:'supply', label:'공급가액', w:100, align:'right' },
+      { key:'tax',    label:'세액',    w:100, align:'right' }
     ];
   }
   return [
@@ -1023,15 +1108,245 @@ function planRow(item, cols, showNo, no){
     if(c.key === 'no') text = (showNo && !isEmpty) ? String(no) : '';
     else if(c.key === 'name') text = item.name || '';
     else if(c.key === 'spec') text = item.spec || '';
+    else if(c.key === 'unit') text = (!isEmpty && item.unit) ? item.unit : '';
     else if(c.key === 'qty') text = (!isEmpty && item.qty) ? fmtQty(item.qty) : '';
     else if(c.key === 'price') text = (!isEmpty && item.price) ? fmtWon(item.price) : '';
     else if(c.key === 'amount') text = isEmpty ? '' : fmtWon(item.amount);
+    else if(c.key === 'supply') text = isEmpty ? '' : fmtWon(item.rsupply);
+    else if(c.key === 'tax') text = (isEmpty || item.rtax == null) ? '' : fmtWon(item.rtax);
     else if(c.key === 'remark') text = item.remark || '';
     const lines = text ? wrapText(mctx, text, c.w - padX*2, size, c.key === 'name' ? 500 : 400) : [];
     if(lines.length > maxLines) maxLines = lines.length;
     return { c, text, lines };
   });
   return { h: Math.max(31, maxLines*13.6 + padY*2), cells, padX, padY, size };
+}
+
+/* =====================================================================
+   상세 공사내역서 전용 양식 (실제 쓰던 공사내역서 양식 반영)
+   상단 제목·담당자·견적일자 → 좌(공급받는자)·우(공급자) 사업자 표
+   → 품목표(NO·품명·규격·단위·수량·단가·공급가액·세액) → 소계·총공급가액·세액·합계
+   → 참고사항(완료 확인 문구)·계좌번호
+   ===================================================================== */
+const DT = { vLabelW:28, labelW:62, padX:7, cellMinH:26, ujLabelW:30 };
+const DET_BLUE = '#1F4E8C';
+
+function planDetailHeader(doc){
+  const hasTitle = !!(doc.title && String(doc.title).trim());
+  return { hasTitle, h: hasTitle ? 130 : 100 };
+}
+function drawDetailHeader(ctx, doc, plan){
+  const y = MY, rx = MX + CW;
+  // 제목
+  hairline(ctx, MX, y, rx, DET_BLUE, 2);
+  txt(ctx, '공사내역서', MX + CW/2, y + 8, { size:19, weight:700, ls:9, align:'center', color:C.navy });
+  hairline(ctx, MX, y + 33, rx, DET_BLUE, 1.2);
+  let yy = y + 42;
+  // 담당자 · 연락처
+  const biz = doc.biz || {};
+  txt(ctx, '담당자', MX, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, ':', MX + 36, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, biz.ceo || '', MX + 45, yy - 1, { size:10, weight:600, color:C.ink });
+  txt(ctx, '연락처', MX + 220, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, ':', MX + 256, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, biz.telDetail || biz.tel || '', MX + 265, yy - 1, { size:10, weight:600, color:C.ink });
+  if(doc.docNo) txt(ctx, 'No. ' + doc.docNo, rx, yy - 0.5, { size:8.8, color:C.faint, align:'right' });
+  hairline(ctx, MX, yy + 22, rx, C.line, 1);
+  yy += 30;
+  // 견적일자
+  txt(ctx, '견적일자', MX, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, ':', MX + 46, yy, { size:9.2, weight:700, color:'#54627A' });
+  txt(ctx, doc.dateKoWeek || doc.dateKo || '', MX + 55, yy - 1, { size:10, weight:600, color:C.ink });
+  hairline(ctx, MX, yy + 22, rx, C.line, 1);
+  yy += 30;
+  // 공사명(입력한 경우에만)
+  if(plan.hasTitle){
+    txt(ctx, '공사명', MX, yy, { size:9.2, weight:700, color:'#54627A' });
+    txt(ctx, ':', MX + 36, yy, { size:9.2, weight:700, color:'#54627A' });
+    txt(ctx, doc.title, MX + 45, yy - 1, { size:10, weight:600, color:C.ink });
+    hairline(ctx, MX, yy + 22, rx, C.line, 1);
+    yy += 30;
+  }
+  return yy;
+}
+
+/* 좌우 사업자 표 — 같은 높이의 행을 나란히 둔다 */
+function detailTablesPlan(doc){
+  const gap = 12;
+  const bw = Math.round((CW - gap) / 2);
+  const vw = DT.vLabelW, lw = DT.labelW, padX = DT.padX;
+  const valW = bw - vw - lw - padX * 2 - 3;
+  const ujV1 = Math.floor((bw - vw - lw - DT.ujLabelW) / 2);
+  const ujV2 = bw - vw - lw - DT.ujLabelW - ujV1;
+  const b = doc.biz || {};
+  const c = doc.client || {};
+  const left = [
+    { label:'상호',   value: c.name || '' },
+    { label:'등록번호', value: c.bizno || '' },
+    { label:'대표자', value: c.ceo || '' },
+    { label:'연락처', value: c.tel || '' },
+    { label:'소재지', value: c.addr || '' }
+  ];
+  const right = [
+    { label:'등록번호', value: b.bizno || '' },
+    { label:'대표자',  value: b.ceo || '', inst:true },
+    { label:'회사명',  value: b.name || '' },
+    { label:'소재지',  value: b.addr || '' },
+    { kind:'uj', label:'업태', up: b.uptae || '', label2:'종목', jo: b.jongmok || '' }
+  ];
+  const hs = [];
+  let h = 0;
+  for(let i = 0; i < left.length; i++){
+    const key = label => String(label || '').trim();
+    const lLeft = Math.max(1, key(left[i].value) ? wrapText(mctx, left[i].value, valW, 9.2, 400).length : 1);
+    let lRight;
+    if(right[i].kind === 'uj'){
+      const a = key(right[i].up) ? wrapText(mctx, right[i].up, ujV1 - padX*2, 9.2, 400).length : 1;
+      const d = key(right[i].jo) ? wrapText(mctx, right[i].jo, ujV2 - padX*2, 9.2, 400).length : 1;
+      lRight = Math.max(a, d);
+    }else{
+      lRight = key(right[i].value) ? wrapText(mctx, right[i].value, valW, 9.2, 400).length : 1;
+    }
+    const rh = Math.max(DT.cellMinH, Math.max(lLeft, lRight) * 13 + 12);
+    hs.push(rh); h += rh;
+  }
+  return { gap, bw, vw, lw, padX, valW, ujV1, ujV2, left, right, hs, h };
+}
+
+function drawDetailTable(ctx, x, y, w, rows, hs, vLabel, opt){
+  opt = opt || {};
+  const vw = DT.vLabelW, lw = DT.labelW, padX = DT.padX;
+  const h = opt.h || hs.reduce((a, b)=>a + b, 0);
+  const box = '#C9D3E2';
+  // 세로 라벨(공급자 · 공급받는자)
+  ctx.fillStyle = '#E7EEF7';
+  ctx.fillRect(x + 1, y + 1, vw - 1, h - 2);
+  const chars = String(vLabel).split('');
+  const lh = 13.4;
+  const startY = y + Math.max(5, (h - chars.length * lh) / 2);
+  chars.forEach((ch, i)=> txt(ctx, ch, x + vw/2, startY + i*lh, { size:10, weight:500, color:'#41546F', align:'center' }));
+  // 행
+  let ry = y;
+  rows.forEach((r, i)=>{
+    const rh = hs[i];
+    const mid = ry + rh/2;
+    if(r.kind === 'uj'){
+      const w1 = opt.ujV1, w2 = opt.ujV2;
+      // 라벨 칸 배경
+      ctx.fillStyle = '#F5F8FC';
+      ctx.fillRect(x + vw + 0.5, ry + 0.5, lw - 1, rh - 1);
+      ctx.fillRect(x + vw + lw + w1 + 0.5, ry + 0.5, DT.ujLabelW - 1, rh - 1);
+      txt(ctx, r.label, x + vw + padX, mid - 6.5, { size:9, weight:600, color:'#54627A' });
+      txt(ctx, r.label2, x + vw + lw + w1 + padX, mid - 6.5, { size:9, weight:600, color:'#54627A' });
+      const upLines = r.up ? wrapText(mctx, r.up, w1 - padX*2, 9.2, 400) : [];
+      const joLines = r.jo ? wrapText(mctx, r.jo, w2 - padX*2, 9.2, 400) : [];
+      const ly = (n)=> mid - (n * 13)/2 + 0.4;
+      upLines.forEach((ln, k)=> txt(ctx, ln, x + vw + lw + padX, ly(upLines.length) + k*13, { size:9.2, color:C.ink2 }));
+      joLines.forEach((ln, k)=> txt(ctx, ln, x + vw + lw + w1 + DT.ujLabelW + padX, ly(joLines.length) + k*13, { size:9.2, color:C.ink2 }));
+      vline(ctx, x + vw + lw + w1, ry, ry + rh, '#E1E8F2', 1);
+      vline(ctx, x + vw + lw, ry, ry + rh, '#E1E8F2', 1);
+    }else{
+      ctx.fillStyle = '#F5F8FC';
+      ctx.fillRect(x + vw + 0.5, ry + 0.5, lw - 1, rh - 1);
+      txt(ctx, r.label, x + vw + padX, mid - 6.5, { size:9, weight:600, color:'#54627A' });
+      if(r.value){
+        const lines = wrapText(mctx, r.value, opt.valW, 9.2, 400);
+        const ly = mid - (lines.length * 13)/2 + 0.4;
+        lines.forEach((ln, k)=> txt(ctx, ln, x + vw + lw + padX, ly + k*13, { size:9.2, color:C.ink2 }));
+      }
+      if(r.inst){
+        txt(ctx, '(인)', x + w - padX - 2, mid - 6.5, { size:8.6, color:C.faint, align:'right' });
+        if(opt.stamp){
+          const img = stampCache(opt.stamp);
+          if(img && img.complete && img.naturalWidth){
+            const s = Math.min(34, rh + 6);
+            ctx.save();
+            try{ ctx.globalCompositeOperation = 'multiply'; }catch(e){}
+            ctx.globalAlpha = 0.93;
+            ctx.drawImage(img, x + w - s - 3, ry + (rh - s)/2, s, s);
+            ctx.restore();
+          }
+        }
+      }
+      vline(ctx, x + vw + lw, ry, ry + rh, '#E1E8F2', 1);
+    }
+    if(i < rows.length - 1) hairline(ctx, x + vw, ry + rh - 0.5, x + w, '#E1E8F2', 1);
+    ry += rh;
+  });
+  // 테두리
+  ctx.strokeStyle = box; ctx.lineWidth = 1;
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  vline(ctx, x + vw, y + 1, y + h - 1, box, 1);
+}
+
+function detailTotalRows(doc){
+  const cm = doc.cm;
+  const rows = [];
+  if(cm.vat === 'incl'){
+    rows.push(['소계', cm.total]);
+    rows.push(['총공급가액', cm.supply]);
+    rows.push(['세액', cm.tax]);
+  }else if(cm.vat === 'excl'){
+    rows.push(['소계', cm.sum]);
+    rows.push(['총공급가액', cm.supply]);
+    rows.push(['세액', cm.tax]);
+  }else{
+    rows.push(['소계', cm.sum]);
+    rows.push(['총공급가액', cm.supply]);
+  }
+  rows.push([cm.vat === 'none' ? '합계' : '합계(부가세 포함)', cm.total, true]);
+  return rows;
+}
+function detailNotePlan(doc){
+  const note = String(doc.note || '');
+  if(!note) return { lines:[], h:0 };
+  const lines = wrapText(mctx, note, CW - 78, 9.4, 400);
+  return { lines, h: lines.length * 16 + 4 };
+}
+function detailBottomHeight(doc){
+  const rows = detailTotalRows(doc);
+  let h = (rows.length - 1) * 21 + 32;
+  h += 26;                                  // 한글 금액 줄 + 간격
+  if(doc.note) h += 14 + detailNotePlan(doc).h;
+  if(acctText(doc)) h += 10 + 18;
+  return h + 8;
+}
+function drawDetailBottom(ctx, doc, y){
+  const rx = MX + CW;
+  let yy = y;
+  const rows = detailTotalRows(doc);
+  rows.forEach(r=>{
+    if(r[2]){
+      hairline(ctx, MX, yy, rx, C.navy, 1.4);
+      txt(ctx, r[0], MX, yy + 9, { size:11.5, weight:800, color:C.navy });
+      txt(ctx, fmtWon(r[1]) + '원', rx, yy + 5, { size:15, weight:800, color:C.navy, align:'right' });
+      yy += 30;
+      hairline(ctx, MX, yy, rx, C.navy, 1.4);
+      yy += 2;
+    }else{
+      txt(ctx, r[0], MX, yy + 4, { size:9.4, color:'#54627A' });
+      txt(ctx, fmtWon(r[1]) + '원', rx, yy + 3, { size:10.4, weight:600, color:C.ink2, align:'right' });
+      yy += 21;
+    }
+  });
+  yy += 10;
+  txt(ctx, amountKo(doc.cm.total), rx, yy, { size:8.6, color:'#9AA5B4', align:'right' });
+  yy += 17;
+  if(doc.note){
+    const np = detailNotePlan(doc);
+    yy += 14;
+    txt(ctx, '참고사항', MX, yy + 1, { size:9, weight:700, color:'#7C8899' });
+    np.lines.forEach((ln, i)=> txt(ctx, ln, MX + 78, yy + i*16, { size:9.4, color:'#37445A' }));
+    yy += np.h;
+  }
+  const at = acctText(doc);
+  if(at){
+    yy += 10;
+    txt(ctx, '계좌번호', MX, yy + 1, { size:9, weight:700, color:'#7C8899' });
+    txt(ctx, at, MX + 78, yy, { size:9.4, color:C.ink2 });
+    yy += 18;
+  }
+  return yy;
 }
 
 /* ---------------- 정보 박스(공급자/공급받는자) ---------------- */
@@ -1250,8 +1565,9 @@ function drawFooter(ctx, doc, y0, pageNo, totalPages, compact){
 function paginate(doc){
   const cols = columnsFor(doc.type);
   const realRows = doc.cm.items.map((it, i)=>planRow(it, cols, true, i + 1));
-  const header1 = planHeaderPage1(doc);
-  const tbar = (doc.type === 'detail' && doc.title) ? 1 : 0;
+  const det = doc.type === 'detail';
+  const header1 = det ? planDetailHeader(doc) : planHeaderPage1(doc);
+  const tbar = (!det && doc.title) ? 1 : 0;
 
   // 정보 박스
   const gap = 14;
@@ -1272,11 +1588,15 @@ function paginate(doc){
   if(doc.type === 'detail' && doc.client.site) cRows.push(['현장', doc.client.site]);
   if(doc.type === 'detail' && doc.period) cRows.push(['공사기간', doc.period]);
   const cBox = planInfoBox(bw, { label:'공급받는자', name: doc.client.name || '', rows: cRows, muted: !doc.client.name });
-  const infoH = Math.max(sBox.h, cBox.h);
+  const tables = det ? detailTablesPlan(doc) : null;
+  const infoH = det ? tables.h : Math.max(sBox.h, cBox.h);
 
   const TH = 30;
-  const bottomH = bottomHeight(doc);
-  const page1Top = MY + header1.h + 15 + infoH + (tbar ? 38 : 0) + 14; // 표(헤더) 시작 y
+  const bottomH = det ? detailBottomHeight(doc) : bottomHeight(doc);
+  const footH = det ? 0 : FOOT_H;
+  const page1Top = det
+    ? (MY + header1.h + 10 + infoH + 14)
+    : (MY + header1.h + 15 + infoH + (tbar ? 38 : 0) + 14); // 표(헤더) 시작 y
   const page2Top = MY + 32;
 
   // 마지막 페이지 여유(빈 행) 계산을 위해 우선 분배
@@ -1286,8 +1606,8 @@ function paginate(doc){
   let guard = 0;
   while(guard++ < 80){
     const rowsTop = (first ? page1Top : page2Top) + TH;
-    const availLast = PH - MB - 22 - bottomHeight(doc) - 18 - rowsTop;
-    const availCont = PH - MB - FOOT_H - 8 - rowsTop;
+    const availLast = PH - MB - 22 - bottomH - 18 - rowsTop;
+    const availCont = PH - MB - footH - 8 - rowsTop;
     let remainH = 0;
     for(let k = i; k < realRows.length; k++) remainH += realRows[k].h;
     let n = 0, h = 0, isLast = false;
@@ -1318,54 +1638,18 @@ function paginate(doc){
   const realOnLast = lastPage.to - lastPage.from;
   let remainH = lastPage.avail - lastPage.rowH;
   const blankHs = [];
-  const want = Math.max(0, Math.min((pages.length > 1 ? 4 : 12) - realOnLast, Math.floor(remainH / 31)));
+  const want = det ? 0 : Math.max(0, Math.min((pages.length > 1 ? 4 : 12) - realOnLast, Math.floor(remainH / 31)));
   while(blankHs.length < want && remainH >= 31){
     blankHs.push(31);
     remainH -= 31;
   }
   lastPage.blankHs = blankHs;
 
-  return { doc, cols, realRows, pages, header1, infoH, sBox, cBox, page1Top, page2Top, TH, tbar };
+  return { doc, cols, realRows, pages, header1, infoH, sBox, cBox, page1Top, page2Top, TH, tbar, det, tables, bottomH };
 }
 
 /* ---------------- 페이지 그리기 ---------------- */
-function drawPage(ctx, plan, pageIndex, opts){
-  const doc = plan.doc;
-  const pages = plan.pages;
-  const page = pages[pageIndex];
-  const total = pages.length;
-  ctx.save();
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.restore();
-
-  let y;
-  if(page.first){
-    y = drawHeaderPage1(ctx, doc, plan.header1);
-    // 정보 박스
-    const gap = 14;
-    const bw = Math.round((CW - gap) / 2);
-    const boxY = y + 14;
-    // 한국 표준 양식: 왼쪽 = 공급받는자(고객/수신), 오른쪽 = 공급자(우리 사업자)
-    drawInfoBox(ctx, MX, boxY, Object.assign({}, plan.cBox, { w: bw, h: plan.infoH }), { label:'공급받는자', name: doc.client.name || '', muted: !doc.client.name });
-    drawInfoBox(ctx, MX + bw + gap, boxY, Object.assign({}, plan.sBox, { w: bw, h: plan.infoH }), { label:'공급자', name: doc.biz.name || '' });
-    y = boxY + plan.infoH;
-    if(plan.tbar){
-      y += 12;
-      roundRect(ctx, MX, y, CW, 26, 6);
-      ctx.fillStyle = '#F1F5FB'; ctx.fill();
-      txt(ctx, '공사명', MX + 12, y + 7, { size:8.4, weight:700, color:C.faint, ls:0.5 });
-      txt(ctx, doc.title, MX + 58, y + 6, { size:10, weight:600, color:C.ink2 });
-      y += 26;
-    }
-    y += 14;
-  }else{
-    y = drawHeaderCompact(ctx, doc, pageIndex + 1);
-    y += 10;
-  }
-
-  const rowsTop = y;
+function drawRowsBlock(ctx, plan, page, rowsTop){
   const rows = [];
   for(let i = page.from; i < page.to; i++) rows.push(plan.realRows[i]);
   if(page.bottom && page.blankHs){
@@ -1408,7 +1692,7 @@ function drawPage(ctx, plan, pageIndex, opts){
       (cell.lines.length ? cell.lines : []).forEach((ln, i)=>{
         txt(ctx, ln, c.align === 'left' ? cx2 + r.padX : (c.align === 'center' ? cx2 + c.w/2 : cx2 + c.w - r.padX), ty + i*lineH, {
           size: r.size, weight: c.key === 'name' ? 500 : 400, align: c.align,
-          color: c.key === 'no' ? C.faint : (c.key === 'amount' ? C.ink : C.ink2)
+          color: c.key === 'no' ? C.faint : (c.key === 'amount' || c.key === 'supply' || c.key === 'tax' ? C.ink : C.ink2)
         });
       });
       cx2 += c.w;
@@ -1417,9 +1701,63 @@ function drawPage(ctx, plan, pageIndex, opts){
     hairline(ctx, MX, ry + r.h - 1, MX + CW, '#E3E9F2', 1);
     ry += r.h;
   });
+  return tableH;
+}
+function drawPage(ctx, plan, pageIndex, opts){
+  const doc = plan.doc;
+  const pages = plan.pages;
+  const page = pages[pageIndex];
+  const total = pages.length;
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.restore();
+
+  let y;
+  if(page.first){
+    if(plan.det){
+      // 공사내역서: 제목 → 담당자/연락처 → 견적일자 → 좌우 사업자 표
+      y = drawDetailHeader(ctx, doc, plan.header1);
+      const tp = plan.tables;
+      const ty = y + 10;
+      drawDetailTable(ctx, MX, ty, tp.bw, tp.left, tp.hs, '공급받는자', { h: tp.h, bw: tp.bw, valW: tp.valW, ujV1: tp.ujV1, ujV2: tp.ujV2 });
+      drawDetailTable(ctx, MX + tp.bw + tp.gap, ty, tp.bw, tp.right, tp.hs, '공급자', { h: tp.h, bw: tp.bw, valW: tp.valW, ujV1: tp.ujV1, ujV2: tp.ujV2, stamp: doc.stampImg });
+      y = ty + tp.h + 14;
+    }else{
+    y = drawHeaderPage1(ctx, doc, plan.header1);
+    // 정보 박스
+    const gap = 14;
+    const bw = Math.round((CW - gap) / 2);
+    const boxY = y + 14;
+    // 한국 표준 양식: 왼쪽 = 공급받는자(고객/수신), 오른쪽 = 공급자(우리 사업자)
+    drawInfoBox(ctx, MX, boxY, Object.assign({}, plan.cBox, { w: bw, h: plan.infoH }), { label:'공급받는자', name: doc.client.name || '', muted: !doc.client.name });
+    drawInfoBox(ctx, MX + bw + gap, boxY, Object.assign({}, plan.sBox, { w: bw, h: plan.infoH }), { label:'공급자', name: doc.biz.name || '' });
+    y = boxY + plan.infoH;
+    if(plan.tbar){
+      y += 12;
+      roundRect(ctx, MX, y, CW, 26, 6);
+      ctx.fillStyle = '#F1F5FB'; ctx.fill();
+      txt(ctx, '공사명', MX + 12, y + 7, { size:8.4, weight:700, color:C.faint, ls:0.5 });
+      txt(ctx, doc.title, MX + 58, y + 6, { size:10, weight:600, color:C.ink2 });
+      y += 26;
+    }
+    y += 14;
+    }
+  }else{
+    y = drawHeaderCompact(ctx, doc, pageIndex + 1);
+    y += 10;
+  }
+
+  const rowsTop = y;
+  const tableH = drawRowsBlock(ctx, plan, page, rowsTop);
 
   if(page.bottom){
-    drawBottom(ctx, doc, rowsTop + tableH + 18, pageIndex + 1, total, null);
+    if(plan.det) drawDetailBottom(ctx, doc, rowsTop + tableH + 16);
+    else drawBottom(ctx, doc, rowsTop + tableH + 18, pageIndex + 1, total, null);
+  }else if(plan.det){
+    hairline(ctx, MX, PH - MB - 16, MX + CW, C.soft, 1);
+    txt(ctx, '다음 페이지에 계속', MX, PH - MB - 4, { size:9.2, color:C.faint });
   }else{
     drawFooter(ctx, doc, PH - MB - FOOT_H, pageIndex + 1, total, true);
   }
@@ -1472,7 +1810,7 @@ function normalizeState(src){
   const base = newState((src && src.type) || 'quote', (src && src.bizId) || BIZ.activeId);
   const s = Object.assign(base, src || {});
   if(!TYPES[s.type]) s.type = 'quote';
-  s.client = Object.assign({ name:'', email:'', tel:'', addr:'', site:'' }, (src && src.client) || {});
+  s.client = Object.assign({ name:'', email:'', tel:'', addr:'', site:'', ceo:'', bizno:'' }, (src && src.client) || {});
   s.acct = Object.assign({ bank:'', number:'', holder:'' }, (src && src.acct) || {});
   s.stamp = Object.assign({ show:true }, (src && src.stamp) || {});
   s.items = (Array.isArray(s.items) && s.items.length)
@@ -1519,6 +1857,7 @@ function renderBizSummary(){
   if(b.ceo) parts.push('대표 <b>' + esc(b.ceo) + '</b>');
   if(b.bizno) parts.push('사업자번호 <b>' + esc(b.bizno) + '</b>');
   if(b.tel) parts.push('연락처 <b>' + esc(b.tel) + '</b>');
+  if(b.telDetail) parts.push('공사내역서 연락처 <b>' + esc(b.telDetail) + '</b>');
   if(b.email) parts.push('이메일 <b>' + esc(b.email) + '</b>');
   if(b.addr) parts.push('주소 <b>' + esc(b.addr) + '</b>');
   const acc = [b.bank, b.acct, b.holder ? '예금주 ' + b.holder : ''].filter(Boolean).join(' ');
@@ -1588,6 +1927,7 @@ function renderDocMeta(){
 }
 function renderItems(){
   const box = $('#items');
+  const isDet = S.type === 'detail';
   box.innerHTML = S.items.map((it, i)=>{
     return '<div class="item" data-i="' + i + '">' +
       '<div class="item-top">' +
@@ -1599,23 +1939,35 @@ function renderItems(){
       '</div>' +
       '<input type="text" data-bind="items.' + i + '.name" placeholder="품명 (예: 상가 원상복구 철거)" autocomplete="off">' +
       '<div class="row">' +
-        '<input type="text" data-bind="items.' + i + '.spec" placeholder="규격 · 비고" autocomplete="off">' +
-        '<input type="number" data-bind="items.' + i + '.qty" placeholder="수량" inputmode="decimal" step="any">' +
+        '<input type="text" data-bind="items.' + i + '.spec" placeholder="' + (isDet ? '규격' : '규격 · 비고') + '" autocomplete="off">' +
+        (isDet
+          ? '<input type="text" data-bind="items.' + i + '.unit" placeholder="단위 (예: 식 · 톤 · 대)" autocomplete="off">'
+          : '<input type="number" data-bind="items.' + i + '.qty" placeholder="수량" inputmode="decimal" step="any">') +
       '</div>' +
       '<div class="row">' +
+        (isDet ? '<input type="number" data-bind="items.' + i + '.qty" placeholder="수량" inputmode="decimal" step="any">' : '') +
         '<input type="number" data-bind="items.' + i + '.unitPrice" placeholder="단가 (원)" inputmode="numeric" step="any">' +
-        '<div class="amount"><span>금액</span><b data-amt="' + i + '">0원</b></div>' +
+        (isDet ? '' : '<div class="amount"><span>금액</span><b data-amt="' + i + '">0원</b></div>') +
       '</div>' +
-      (S.type === 'detail' ? '<div class="row" style="grid-template-columns:1fr"><input type="text" data-bind="items.' + i + '.remark" placeholder="비고 (선택)" autocomplete="off"></div>' : '') +
+      (isDet
+        ? '<div class="amount full"><span>공급가액 · 세액</span><b data-amt="' + i + '">0원</b></div>' +
+          '<div class="row" style="grid-template-columns:1fr"><input type="text" data-bind="items.' + i + '.remark" placeholder="비고 (선택)" autocomplete="off"></div>'
+        : '') +
     '</div>';
   }).join('');
   updateRowAmounts();
 }
 function updateRowAmounts(){
   const cm = calcModel(S);
+  const isDet = S.type === 'detail';
   cm.items.forEach((it, i)=>{
     const el = document.querySelector('[data-amt="' + i + '"]');
-    if(el) el.textContent = fmtWon(it.amount) + '원';
+    if(!el) return;
+    if(isDet && cm.vat !== 'none' && it.rtax != null){
+      el.textContent = fmtWon(it.rsupply) + '원 / 세액 ' + fmtWon(it.rtax) + '원';
+    }else{
+      el.textContent = fmtWon(it.amount) + '원';
+    }
   });
 }
 function renderCalc(){
@@ -1667,6 +2019,7 @@ function renderChips(){
   $('#noteChips').innerHTML = NOTE_CHIPS.map(t=>'<button class="chip" type="button" data-chip="' + esc(t) + '">+ ' + esc(t) + '</button>').join('');
 }
 function renderForm(){
+  syncAutoNote(S);
   renderTypeTabs();
   renderDocMeta();
   renderBizSelect();
@@ -1683,6 +2036,8 @@ function renderForm(){
   });
   $$('[data-detail-only]').forEach(el=>{ el.hidden = S.type !== 'detail'; });
   $$('[data-not-detail]').forEach(el=>{ el.hidden = S.type === 'detail'; });
+  const noteEl = document.querySelector('[data-bind="note"]');
+  if(noteEl) noteEl.value = S.note || '';
   updatePageUI();
 }
 
@@ -2050,7 +2405,11 @@ function bindEvents(){
     if(!b) return;
     const t = b.dataset.type;
     if(t === S.type) return;
+    const wasAuto = S.noteAuto !== false && S._autoNote === S.note;
     S.type = t;
+    // 공사내역서의 완료 확인 문구는 그 문서에만 — 견적서·거래명세서로 바꾸면 자동 문구는 비운다
+    if(t === 'detail') syncAutoNote(S);
+    else if(wasAuto){ S.note = ''; S.noteAuto = true; }
     if(!S.docNoEdited) S.docNo = nextDocNo(S.type, S.date);
     PLAN = null; PAGE = 0;
     renderForm();
@@ -2084,7 +2443,15 @@ function bindEvents(){
     const path = el.dataset.bind;
     setPath(S, path, el.value);
     if(path === 'docNo') S.docNoEdited = true;
+    if(path === 'note') S.noteAuto = false;
     if(path.indexOf('acct.') === 0) persistAcct();
+    if(path === 'date'){
+      if(S.type === 'detail'){
+        syncAutoNote(S);
+        const ta = document.querySelector('[data-bind="note"]');
+        if(ta) ta.value = S.note || '';
+      }
+    }
     if(path === 'date' && !S.docNoEdited){
       S.docNo = nextDocNo(S.type, S.date);
       const noEl = document.querySelector('[data-bind="docNo"]');
@@ -2269,7 +2636,10 @@ function openBizModal(id){
   $('#bzName').value = b ? (b.name || '') : '';
   $('#bzCeo').value = b ? (b.ceo || '') : '';
   $('#bzNo').value = b ? (b.bizno || '') : '';
+  $('#bzUptae').value = b ? (b.uptae || '') : '';
+  $('#bzJongmok').value = b ? (b.jongmok || '') : '';
   $('#bzTel').value = b ? (b.tel || '') : '';
+  $('#bzTelDetail').value = b ? (b.telDetail || '') : '';
   $('#bzAddr').value = b ? (b.addr || '') : '';
   $('#bzEmail').value = b ? (b.email || '') : '';
   renderMailChips($('#bzMailChips'), b ? b.email : '', m=>{
@@ -2294,7 +2664,10 @@ function saveBizModal(){
   b.label = b.label && b.builtin ? b.label : name;
   b.ceo = $('#bzCeo').value.trim();
   b.bizno = $('#bzNo').value.trim();
+  b.uptae = $('#bzUptae').value.trim();
+  b.jongmok = $('#bzJongmok').value.trim();
   b.tel = $('#bzTel').value.trim();
+  b.telDetail = $('#bzTelDetail').value.trim();
   b.addr = $('#bzAddr').value.trim();
   b.email = $('#bzEmail').value.trim();
   b.bank = $('#bzBank').value.trim();
