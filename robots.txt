@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /quote/
 
 Sitemap: https://ascent-kr.github.io/sitemap.xml
