@@ -115,6 +115,12 @@ body[data-view="preview"] .preview-pane{display:block}
 .type-btn.active{background:var(--navy);border-color:var(--navy);box-shadow:0 4px 12px rgba(18,41,74,.22)}
 .type-btn.active b{color:#fff}
 .type-btn.active span{color:#A9BCD8}
+.type-hint{
+  display:flex;align-items:flex-start;gap:6px;margin:-2px 2px 12px;
+  font-size:11.5px;line-height:1.5;color:#7C8899;letter-spacing:-.1px;word-break:keep-all;
+}
+.type-hint b{color:#4B5768;font-weight:700}
+.type-hint svg{width:14px;height:14px;flex:none;margin-top:1px;color:#98A2B3}
 
 /* fields */
 .field{display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -412,8 +418,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     <div class="types" id="docTypes" role="tablist" aria-label="문서 종류">
       <button class="type-btn active" data-type="quote" role="tab" aria-selected="true"><b>견적서</b><span>상담·견적</span></button>
       <button class="type-btn" data-type="invoice" role="tab" aria-selected="false"><b>거래명세서</b><span>납품·정산</span></button>
-      <button class="type-btn" data-type="detail" role="tab" aria-selected="false"><b>상세 공사내역서</b><span>지원금·증빙</span></button>
+      <button class="type-btn" data-type="detail" role="tab" aria-selected="false"><b>공사내역서</b><span>완료확인·지원금</span></button>
     </div>
+    <p class="type-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13M13 6l6 6-6 6"/></svg><span>입력한 내역 그대로 <b>문서 양식만</b> 바뀝니다 · 사업자·거래처·품목·부가세·금액이 그대로 이어집니다</span></p>
 
     <div class="card">
       <div class="card-head">
@@ -566,7 +573,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     <div class="page-stage">
       <div class="frame"><canvas id="docCanvas" width="794" height="1123"></canvas></div>
     </div>
-    <p class="preview-hint">A4 비율 그대로 출력됩니다 · <b>PNG는 카톡 전송용</b>, <b>PDF는 인쇄 대화상자에서 저장</b></p>
+    <p class="preview-hint">A4 비율 그대로 출력됩니다 · <b>PNG는 카톡 전송용</b>, <b>PDF는 인쇄 대화상자에서 저장</b><br><span style="display:inline-block;margin-top:5px;color:#98A2B3">문서 종류는 <b>[입력]</b> 화면 맨 위 탭에서 바꿉니다 · 입력한 내역 그대로 양식만 바뀝니다</span></p>
   </section>
 </main>
 
@@ -644,7 +651,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       <div class="help-list">
         <div>
           <h4><span class="num">1</span>문서 종류는 위에서 한 번만</h4>
-          <p>견적서 · 거래명세서 · 상세 공사내역서가 같은 입력값을 공유합니다. 견적서를 보낸 뒤 거래명세서로 바꿀 때는 <b>저장한 문서</b>에서 <b>거래명세서로</b> 버튼을 누르면 품목이 그대로 넘어갑니다.</p>
+          <p>견적서 · 거래명세서 · 공사내역서가 같은 입력값을 공유합니다. 견적서를 보낸 뒤 거래명세서로 바꿀 때는 <b>저장한 문서</b>에서 <b>거래명세서로</b> 버튼을 누르면 품목이 그대로 넘어갑니다.</p>
         </div>
         <div>
           <h4><span class="num">2</span>어디에도 전송되지 않습니다</h4>
@@ -668,7 +675,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         </div>
         <div>
           <h4><span class="num">7</span>공사내역서 양식</h4>
-          <p><b>상세 공사내역서</b>를 고르면 실제 공사내역서 양식으로 나옵니다. 상단에 <b>담당자</b>(사업자 대표자)와 <b>연락처</b>(사업자의 <b>공사내역서 연락처</b>)·<b>견적일자</b>가 들어가고, 그 아래 <b>왼쪽 = 공급받는자(상대편 사업자) / 오른쪽 = 공급자(우리 사업자)</b> 표가 나란히 놓입니다. 상대편 상호·사업자번호·대표자는 <b>02 문서 정보</b>에서 적고, 우리 쪽 업태·종목은 <b>[정보 수정]</b>에서 적습니다. 품목표는 <b>NO·품명·규격·단위·수량·단가·공급가액·세액</b>이고, 합계는 <b>소계·총공급가액·세액·합계(부가세 포함)</b>로 나옵니다. 참고사항에는 완료 확인 문구가 자동으로 들어가며(자유롭게 고칠 수 있음), 그 아래에 계좌번호가 찍힙니다. 도장은 서명란이 아니라 <b>공급자 표의 대표자 (인)</b> 자리에 찍힙니다.</p>
+          <p>탭에서 <b>공사내역서</b>를 고르면 실제 공사내역서 양식으로 나옵니다. 상단에 <b>담당자</b>(사업자 대표자)와 <b>연락처</b>(사업자의 <b>공사내역서 연락처</b>)·<b>견적일자</b>가 들어가고, 그 아래 <b>왼쪽 = 공급받는자(상대편 사업자) / 오른쪽 = 공급자(우리 사업자)</b> 표가 나란히 놓입니다. 상대편 상호·사업자번호·대표자는 <b>02 문서 정보</b>에서 적고, 우리 쪽 업태·종목은 <b>[정보 수정]</b>에서 적습니다. 품목표는 <b>NO·품명·규격·단위·수량·단가·공급가액·세액</b>이고, 합계는 <b>소계·총공급가액·세액·합계(부가세 포함)</b>로 나옵니다. 참고사항에는 완료 확인 문구가 자동으로 들어가며(자유롭게 고칠 수 있음), 그 아래에 계좌번호가 찍힙니다. 도장은 서명란이 아니라 <b>공급자 표의 대표자 (인)</b> 자리에 찍힙니다.</p>
         </div>
         <div>
           <h4><span class="num">8</span>고객 이메일로 바로 보내기</h4>
@@ -700,7 +707,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 <script>
 /* =====================================================================
-   견적서 스튜디오 — 견적서 / 거래명세서 / 상세 공사내역서
+   견적서 스튜디오 — 견적서 / 거래명세서 / 공사내역서
    단일 HTML · 모든 입력값은 브라우저 localStorage에만 저장(서버 전송 없음)
    ===================================================================== */
 'use strict';
@@ -735,7 +742,7 @@ const store = {
 const TYPES = {
   quote:   { plain:'견적서',        title:'견 적 서',     prefix:'Q', due:'견적 유효기간', closing:'위와 같이 견적합니다.',        sumLabel:'견적금액' },
   invoice: { plain:'거래명세서',    title:'거래명세서',   prefix:'T', due:'납기일',        closing:'위와 같이 거래 내역을 명세합니다.', sumLabel:'합계금액' },
-  detail:  { plain:'상세 공사내역서', sheet:'공사내역서', title:'상세 공사내역서', prefix:'D', due:'완료일',  closing:'위와 같이 공사 내역을 명세합니다.',  sumLabel:'공사금액' }
+  detail:  { plain:'공사내역서',     sheet:'공사내역서', sub:'완료확인·지원금', title:'공사내역서',     prefix:'D', due:'완료일',  closing:'위와 같이 공사 내역을 명세합니다.',  sumLabel:'공사금액' }
 };
 
 /* ---------------- 사업자 기본값 (확인된 정보만) ----------------
@@ -940,10 +947,9 @@ function detailNoteText(s){
 /* 사용자가 손대지 않은 자동 문구는 사업자·날짜가 바뀌면 다시 맞춘다 */
 function syncAutoNote(s, force){
   const auto = detailNoteText(s);
-  if(s.type === 'detail' && s.noteAuto !== false &&
-     (force || s.noteAuto === true || !String(s.note || '').trim() || s._autoNote === s.note)){
-    s.note = auto;
-  }
+  const empty = !String(s.note || '').trim();       // 비어 있거나
+  const same = s._autoNote === s.note;              // 기본 안내 그대로면 자동 문구로 맞춘다
+  if(s.type === 'detail' && (force || empty || same)) s.note = auto;
   s._autoNote = auto;
   return s.note;
 }
@@ -1123,7 +1129,7 @@ function planRow(item, cols, showNo, no){
 }
 
 /* =====================================================================
-   상세 공사내역서 전용 양식 (실제 쓰던 공사내역서 양식 반영)
+   공사내역서 전용 양식 (실제 쓰던 공사내역서 양식 반영)
    상단 제목·담당자·견적일자 → 좌(공급받는자)·우(공급자) 사업자 표
    → 품목표(NO·품명·규격·단위·수량·단가·공급가액·세액) → 소계·총공급가액·세액·합계
    → 참고사항(완료 확인 문구)·계좌번호
@@ -2014,7 +2020,7 @@ function renderStamp(){
   }
   $('#stampShow').checked = S.stamp.show !== false;
 }
-const NOTE_CHIPS = ['현장 확인 후 최종 확정', '철거·폐기물 처리 포함', '전자세금계산서·상세 공사내역서 발행'];
+const NOTE_CHIPS = ['현장 확인 후 최종 확정', '철거·폐기물 처리 포함', '전자세금계산서·공사내역서 발행'];
 function renderChips(){
   $('#noteChips').innerHTML = NOTE_CHIPS.map(t=>'<button class="chip" type="button" data-chip="' + esc(t) + '">+ ' + esc(t) + '</button>').join('');
 }
@@ -2405,7 +2411,7 @@ function bindEvents(){
     if(!b) return;
     const t = b.dataset.type;
     if(t === S.type) return;
-    const wasAuto = S.noteAuto !== false && S._autoNote === S.note;
+    const wasAuto = !String(S.note || '').trim() || (S.noteAuto !== false && S._autoNote === S.note);
     S.type = t;
     // 공사내역서의 완료 확인 문구는 그 문서에만 — 견적서·거래명세서로 바꾸면 자동 문구는 비운다
     if(t === 'detail') syncAutoNote(S);
