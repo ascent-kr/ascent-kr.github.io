@@ -120,7 +120,7 @@ body[data-view="preview"] .preview-pane{display:block}
 .field{display:flex;flex-direction:column;gap:5px;min-width:0}
 .field > label{font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:-.1px;padding-left:1px}
 .field .sub{font-size:10.5px;color:#98A2B3;font-weight:500}
-input[type=text],input[type=date],input[type=tel],input[type=number],select,textarea{
+input[type=text],input[type=date],input[type=tel],input[type=email],input[type=number],select,textarea{
   width:100%;height:44px;padding:0 12px;border:1px solid var(--line2);border-radius:11px;
   background:#fff;color:var(--ink);font-size:16px;outline:none;transition:border-color .15s,box-shadow .15s;
   appearance:none;-webkit-appearance:none;
@@ -146,6 +146,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   font-size:12.5px;font-weight:600;color:var(--blue);background:var(--blue-soft);
 }
 .link-btn.alt{color:var(--ink2);background:#F1F4F9}
+.quick-biz{display:flex;flex-direction:column;gap:10px;margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
+.mail-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.mail-chip{
+  padding:6px 10px;border-radius:999px;border:1px solid var(--line2);background:#fff;
+  font-size:11.5px;font-weight:600;color:var(--ink2);letter-spacing:-.1px;
+  transition:.12s;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+.mail-chip:hover{border-color:#B9C6E4;background:#F7F9FD}
+.mail-chip.on{background:var(--blue-soft);border-color:#BBD0FA;color:var(--blue)}
 .seg{display:flex;gap:4px;padding:4px;background:#EDF0F5;border-radius:11px}
 .seg button{flex:1;height:36px;border-radius:8px;font-size:12.8px;font-weight:600;color:#5A6779;white-space:nowrap}
 .seg button.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(16,24,40,.14)}
@@ -411,6 +420,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       </div>
       <div class="select-wrap"><select id="bizSelect" aria-label="사업자 선택"></select></div>
       <p class="biz-summary" id="bizSummary"></p>
+      <div class="quick-biz">
+        <div class="field">
+          <label>사업장 주소 <span class="sub">문서에 바로 반영 · 자동 저장</span></label>
+          <input type="text" id="qAddr" placeholder="예) 대전 서구 계백로 1161, 404-M02호" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>우리 이메일 <span class="sub">회신받을 주소</span></label>
+          <input type="email" id="qEmail" placeholder="이 사업자로 회신받을 메일" autocomplete="off">
+        </div>
+        <div class="mail-chips" id="qMailChips"></div>
+      </div>
       <div class="link-row">
         <button class="link-btn alt" id="btnBizEdit">정보 수정</button>
         <button class="link-btn" id="btnLinkAscent" hidden>운명연구소 정보 불러오기</button>
@@ -560,6 +580,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       </div>
       <div class="field"><label>연락처</label><input type="tel" id="bzTel" placeholder="010-0000-0000" autocomplete="off"></div>
       <div class="field"><label>주소</label><input type="text" id="bzAddr" placeholder="사업장 주소" autocomplete="off"></div>
+      <div class="field">
+        <label>우리 이메일 <span class="sub">회신 메일 · 문서·메일 본문에 표시</span></label>
+        <input type="email" id="bzEmail" placeholder="회신받을 메일 주소" autocomplete="off">
+        <div class="mail-chips" id="bzMailChips"></div>
+      </div>
       <div class="grid2">
         <div class="field"><label>은행</label><input type="text" id="bzBank" autocomplete="off"></div>
         <div class="field"><label>예금주</label><input type="text" id="bzHolder" autocomplete="off"></div>
@@ -694,13 +719,17 @@ const TYPES = {
 
 /* ---------------- 사업자 기본값 (확인된 정보만) ----------------
    ※ 주소·계좌 등 확인되지 않은 값은 빈칸으로 둔다. 사용자가 채우면 이 브라우저에 저장된다. */
+const JOTAE_EMAIL = 'jotae1990@naver.com';
+const JOTAE_ADDR  = '대전광역시 서구 계백로 1161, 404-M02호(도안동, 유니온빌딩)';  // 사업자등록증 확인
+const UNM_ADDR    = '대전 동구 대전로1002번길 42-1, 103호';
+const MY_MAILS = ['365naturestore@naver.com', 'mndbrud@naver.com', JOTAE_EMAIL, 'noni1127@naver.com'];
 const BIZ_SEED = [
-  { id:'clean',    label:'클린환경 (폐기물)',        name:'클린환경',        ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:'', bank:'', acct:'', holder:'' },
-  { id:'cheolgeo', label:'원상복구철거센터 (철거)',   name:'원상복구철거센터', ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:'', bank:'', acct:'', holder:'' },
-  { id:'yupum',    label:'유품정리연구소',           name:'유품정리연구소',   ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:'', bank:'', acct:'', holder:'' },
-  { id:'unmyeong', label:'운명연구소 / 운명나침반',  name:'운명연구소',      ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:'대전 동구 대전로1002번길 42-1, 103호', bank:'', acct:'', holder:'' },
-  { id:'ascent',   label:'어센트마케팅',             name:'어센트마케팅',    ceo:'', bizno:'', tel:'', addr:'', bank:'', acct:'', holder:'', linkId:'unmyeong' },
-  { id:'junta',    label:'준탁구클럽',               name:'준탁구클럽',      ceo:'', bizno:'', tel:'', addr:'대전 대덕구 오정로37번길 53 2층', bank:'', acct:'', holder:'' }
+  { id:'clean',    label:'클린환경 (폐기물)',        name:'클린환경',        ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
+  { id:'cheolgeo', label:'원상복구철거센터 (철거)',   name:'원상복구철거센터', ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
+  { id:'yupum',    label:'유품정리연구소',           name:'유품정리연구소',   ceo:'조태현', bizno:'562-10-02975', tel:'010-4366-7275', addr:JOTAE_ADDR, email:JOTAE_EMAIL, bank:'', acct:'', holder:'', sv:2 },
+  { id:'unmyeong', label:'운명연구소 / 운명나침반',  name:'운명연구소',      ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'365naturestore@naver.com', bank:'', acct:'', holder:'', sv:2 },
+  { id:'ascent',   label:'어센트마케팅',             name:'어센트마케팅',    ceo:'김노운', bizno:'750-44-01296', tel:'010-9645-2397', addr:UNM_ADDR, email:'mndbrud@naver.com', bank:'', acct:'', holder:'', linkId:'unmyeong', sv:2 },
+  { id:'junta',    label:'준탁구클럽',               name:'준탁구클럽',      ceo:'', bizno:'', tel:'', addr:'대전 대덕구 오정로37번길 53 2층', email:'', bank:'', acct:'', holder:'', sv:2 }
 ];
 
 /* ---------------- 사업자 목록 로드/저장 ---------------- */
@@ -711,7 +740,19 @@ function loadBiz(){
   BIZ_SEED.forEach(seed=>{
     const found = list.find(b=>b.id===seed.id);
     if(!found) list.push(Object.assign({}, seed, {builtin:true, stamp:''}));
-    else { found.builtin = true; if(found.label==null) found.label = seed.label; }
+    else {
+      found.builtin = true; if(found.label==null) found.label = seed.label;
+      // 프리셋 기본값 갱신: 비어 있는 칸만 새 기본값으로 채운다(사용자가 적은 값은 그대로 둔다)
+      if(found.sv !== seed.sv){
+        ['name','ceo','bizno','tel','addr','email','bank','acct','holder'].forEach(k=>{
+          const cur = found[k];
+          if((cur == null || String(cur).trim() === '') && seed[k]) found[k] = seed[k];
+        });
+        if(seed.linkId && !found.linkId) found.linkId = seed.linkId;
+        found.sv = seed.sv;
+      }
+      if(found.email == null) found.email = '';
+    }
   });
   return { list, activeId: (saved && saved.activeId) || 'clean' };
 }
@@ -1220,6 +1261,7 @@ function paginate(doc){
   if(biz.ceo) sRows.push(['대표', biz.ceo]);
   if(biz.bizno) sRows.push(['사업자번호', biz.bizno]);
   if(biz.tel) sRows.push(['연락처', biz.tel]);
+  if(biz.email) sRows.push(['이메일', biz.email]);
   if(biz.addr) sRows.push(['주소', biz.addr]);
   if(acctText(doc)) sRows.push(['계좌', acctText(doc)]);
   const sBox = planInfoBox(bw, { label:'공급자', name: biz.name || '', rows: sRows });
@@ -1477,6 +1519,7 @@ function renderBizSummary(){
   if(b.ceo) parts.push('대표 <b>' + esc(b.ceo) + '</b>');
   if(b.bizno) parts.push('사업자번호 <b>' + esc(b.bizno) + '</b>');
   if(b.tel) parts.push('연락처 <b>' + esc(b.tel) + '</b>');
+  if(b.email) parts.push('이메일 <b>' + esc(b.email) + '</b>');
   if(b.addr) parts.push('주소 <b>' + esc(b.addr) + '</b>');
   const acc = [b.bank, b.acct, b.holder ? '예금주 ' + b.holder : ''].filter(Boolean).join(' ');
   if(acc) parts.push('계좌 <b>' + esc(acc) + '</b>');
@@ -1484,11 +1527,40 @@ function renderBizSummary(){
   if(!b.ceo) empty.push('대표');
   if(!b.bizno) empty.push('사업자번호');
   if(!b.addr) empty.push('주소');
+  if(!b.email) empty.push('이메일');
   if(!acc) empty.push('계좌');
   let html = parts.length ? parts.join(' · ') : '등록된 정보가 없습니다.';
   if(empty.length) html += '<br><span style="color:#98A2B3">비어 있는 항목: ' + empty.join(' · ') + ' — [정보 수정]에서 채우면 문서에 바로 반영됩니다.</span>';
   $('#bizSummary').innerHTML = html;
   $('#btnLinkAscent').hidden = !(b.linkId);
+  const qa = $('#qAddr');
+  if(qa && document.activeElement !== qa) qa.value = b.addr || '';
+  const qe = $('#qEmail');
+  if(qe && document.activeElement !== qe) qe.value = b.email || '';
+  renderMailChips($('#qMailChips'), b.email, m=>setBizField('email', m));
+}
+/* 자주 쓰는 내 메일 원터치 칩 */
+function renderMailChips(host, current, onPick){
+  if(!host) return;
+  const cur = String(current || '').trim().toLowerCase();
+  host.innerHTML = MY_MAILS.map(m=>'<button type="button" class="mail-chip' + (m.toLowerCase() === cur ? ' on' : '') + '" data-mail="' + esc(m) + '">' + esc(m) + '</button>').join('');
+  host._onPick = onPick;
+  if(!host.dataset.bound){
+    host.dataset.bound = '1';
+    host.addEventListener('click', e=>{
+      const btn = e.target.closest('.mail-chip');
+      if(!btn) return;
+      if(typeof host._onPick === 'function') host._onPick(btn.dataset.mail);
+    });
+  }
+}
+/* 입력 화면에서 주소·우리 이메일을 바로 적으면 그 사업자에 영구 저장 */
+function setBizField(k, v){
+  const b = getBiz(S.bizId);
+  b[k] = String(v == null ? '' : v).trim();
+  saveBiz();
+  renderBizSummary();
+  PLAN = null; renderPreview(); scheduleDraft();
 }
 function applyBiz(id){
   S.bizId = id;
@@ -1907,6 +1979,8 @@ function buildMailto(){
   if(acc) lines.push('· 입금계좌: ' + acc);
   const tel = (b.tel || '').trim();
   if(tel) lines.push('· 연락처: ' + tel);
+  const mail = (b.email || '').trim();
+  if(mail) lines.push('· 회신 메일: ' + mail);
   lines.push('');
   lines.push('※ ' + t.plain + ' 파일(PNG·PDF)을 첨부해 드립니다. 확인 부탁드립니다.');
   const body = lines.join('\r\n');
@@ -1998,6 +2072,9 @@ function bindEvents(){
     b.ceo = src.ceo; b.bizno = src.bizno; b.addr = src.addr; b.tel = b.tel || src.tel;
     saveBiz(); renderBizSummary(); renderPreview(); toast(src.label + ' 정보를 불러왔습니다');
   });
+  // 주소·우리 이메일 바로 입력 → 이 사업자에 영구 저장
+  $('#qAddr').addEventListener('change', e=>setBizField('addr', e.target.value));
+  $('#qEmail').addEventListener('change', e=>setBizField('email', e.target.value));
 
   // 입력
   const editor = $('#editor');
@@ -2194,6 +2271,11 @@ function openBizModal(id){
   $('#bzNo').value = b ? (b.bizno || '') : '';
   $('#bzTel').value = b ? (b.tel || '') : '';
   $('#bzAddr').value = b ? (b.addr || '') : '';
+  $('#bzEmail').value = b ? (b.email || '') : '';
+  renderMailChips($('#bzMailChips'), b ? b.email : '', m=>{
+    $('#bzEmail').value = m;
+    document.querySelectorAll('#bzMailChips .mail-chip').forEach(el=>el.classList.toggle('on', el.dataset.mail === m));
+  });
   $('#bzBank').value = b ? (b.bank || '') : '';
   $('#bzHolder').value = b ? (b.holder || '') : '';
   $('#bzAcct').value = b ? (b.acct || '') : '';
@@ -2214,6 +2296,7 @@ function saveBizModal(){
   b.bizno = $('#bzNo').value.trim();
   b.tel = $('#bzTel').value.trim();
   b.addr = $('#bzAddr').value.trim();
+  b.email = $('#bzEmail').value.trim();
   b.bank = $('#bzBank').value.trim();
   b.holder = $('#bzHolder').value.trim();
   b.acct = $('#bzAcct').value.trim();
